@@ -11,7 +11,7 @@ My version supports Low and Normal tarifs, and also power consumption and power 
 - Tarif1, aka Low, in Dutch written as 'Laag' 
 - Tarif2, aka Normal, aka High, in Dutch written as 'Hoog' 
 
-Every midnight the counters are reset. Beware that SolarEdge allows for a limited number of API calls per day. The displayed power produced and reset at midnight will have a slight delay as they are updated once every 10 minutes.
+Every midnight the counters are reset. Beware that SolarEdge allows for a limited number of API calls per day. The displayed solar power produced will have a slight delay as it is updated once every 10 minutes. Beacuse of that the info in the Lovelace card will temporarily showing old data shortly after the reset at midnight. 
 
 ## Installing
 * Create a backup: Supervisor -> Snapshots
