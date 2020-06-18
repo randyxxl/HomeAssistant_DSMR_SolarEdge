@@ -1,0 +1,97 @@
+# Add all content below to your configuration.yaml
+
+# Put this line close to the other includes (scenes, scripts, etc.)
+input_number:  !include input_number.yaml
+
+
+# Replace key and id with your own credentials
+solaredge:
+    api_key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+    site_id: 0000000
+
+
+# Check https://www.home-assistant.io/integrations/dsmr/ for more info
+sensor:
+  - platform: dsmr
+    port: /dev/ttyUSB0
+    dsmr_version: 5
+
+  - platform: template
+    sensors:
+      # Gebruik (Consumption as reported by the energy supplier)
+      energie_vandaag_gebruik_laag:
+        value_template: >
+          {{ (float(states.sensor.energy_consumption_tarif_1.state) - float(states.input_number.energie_cons_laag.state)) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energiegebruik vandaag laag tarief"
+      energie_vandaag_gebruik_hoog:
+        value_template: >
+          {{ (float(states.sensor.energy_consumption_tarif_2.state) - float(states.input_number.energie_cons_hoog.state)) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energiegebruik vandaag hoog tarief"
+      energie_vandaag_gebruik:
+        value_template: >
+          {{ ((float(states.sensor.energy_consumption_tarif_2.state) - float(states.input_number.energie_cons_hoog.state) + 
+               float(states.sensor.energy_consumption_tarif_1.state) - float(states.input_number.energie_cons_laag.state))) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energiegebruik vandaag totaal"
+        
+      # Productie (Solar power delivered to the energy supplier as reported by them)
+      energie_vandaag_productie_laag:
+        value_template: >
+          {{ (float(states.sensor.energy_production_tarif_1.state) - float(states.input_number.energie_prod_laag.state)) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energieproductie vandaag laag tarief"
+      energie_vandaag_productie_hoog:
+        value_template: >
+           {{ (float(states.sensor.energy_production_tarif_2.state) - float(states.input_number.energie_prod_hoog.state)) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energieproductie vandaag hoog tarief"
+      energie_vandaag_productie:
+        value_template: >
+           {{ ((float(states.sensor.energy_production_tarif_2.state) - float(states.input_number.energie_prod_hoog.state)) + 
+               (float(states.sensor.energy_production_tarif_1.state) - float(states.input_number.energie_prod_laag.state))) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energieproductie vandaag"
+        
+      # Netto (Net power consumed or delivered to the energy supplier as reported by them. Value can be negative on sunny days!)
+      energie_vandaag_netto_laag:
+        value_template: >
+           {{ ( (float(states.sensor.energy_consumption_tarif_1.state) - float(states.input_number.energie_cons_laag.state))
+              - (float(states.sensor.energy_production_tarif_1.state)  - float(states.input_number.energie_prod_laag.state))) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energiebalans vandaag laag tarief"
+      energie_vandaag_netto_hoog:
+        value_template: >
+           {{ ( (float(states.sensor.energy_consumption_tarif_2.state) - float(states.input_number.energie_cons_hoog.state))
+              - (float(states.sensor.energy_production_tarif_2.state)  - float(states.input_number.energie_prod_hoog.state))) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energiebalans vandaag hoog tarief"
+      energie_vandaag_netto:
+        value_template: >
+           {{ ( (float(states.sensor.energy_consumption_tarif_1.state) - float(states.input_number.energie_cons_laag.state))
+              + (float(states.sensor.energy_consumption_tarif_2.state) - float(states.input_number.energie_cons_hoog.state))
+              - (float(states.sensor.energy_production_tarif_2.state)  - float(states.input_number.energie_prod_hoog.state))
+              - (float(states.sensor.energy_production_tarif_1.state)  - float(states.input_number.energie_prod_laag.state)) ) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Energiebalans vandaag"
+
+      # Zelf gebruikte zonne-energie (Solar power personally used. Calulated as solar energy minus power delivered to the energy supplier) 
+      energie_eigen_gebruik:
+        value_template: >
+           {{ (  float(states.sensor.solaredge_energy_today_template.state)   
+              - (float(states.sensor.energy_production_tarif_2.state)  - float(states.input_number.energie_prod_hoog.state)) 
+              - (float(states.sensor.energy_production_tarif_1.state)  - float(states.input_number.energie_prod_laag.state)) ) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Eigen gebruik"
+        
+      # Verbruik in huis (Power personally used). Calulated as solar energy - power delivered to the energy supplier + consumption as reported by the energy supplier)
+      energie_totaal:
+        value_template: >
+           {{ (  float(states.sensor.solaredge_energy_today_template.state)   
+              - (float(states.sensor.energy_production_tarif_2.state)  - float(states.input_number.energie_prod_hoog.state)) 
+              - (float(states.sensor.energy_production_tarif_1.state)  - float(states.input_number.energie_prod_laag.state))
+              + (float(states.sensor.energy_consumption_tarif_2.state) - float(states.input_number.energie_cons_hoog.state)) 
+              + (float(states.sensor.energy_consumption_tarif_1.state) - float(states.input_number.energie_cons_laag.state)) ) | round(2) }}
+        unit_of_measurement: 'kWh'
+        friendly_name: "Verbruik huis"

@@ -1,0 +1,16 @@
+  energie_cons_laag:
+    name: Midnight Power Level Low
+    min: 0
+    max: 999999999
+  energie_cons_hoog:
+    name: Midnight Power Level Normal
+    min: 0
+    max: 999999999
+  energie_prod_laag:
+    name: Midnight Power Level Low
+    min: 0
+    max: 999999999
+  energie_prod_hoog:
+    name: Midnight Power Level Normal
+    min: 0
+    max: 999999999

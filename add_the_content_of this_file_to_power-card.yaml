@@ -1,0 +1,60 @@
+# Copy the content of this file to a Lovelace card.
+cards:
+  - cards:
+      - entity: sensor.energie_vandaag_productie_hoog
+        icon: 'mdi:solar-power'
+        name: Productie Hoog
+        type: sensor
+      - entity: sensor.energie_vandaag_gebruik_hoog
+        icon: 'mdi:gauge'
+        name: Gebruik Hoog
+        type: sensor
+      - entity: sensor.energie_vandaag_netto_hoog
+        icon: 'mdi:scale-balance'
+        name: Netto Hoog
+        type: sensor
+    type: horizontal-stack
+  - cards:
+      - entity: sensor.energie_vandaag_productie_laag
+        icon: 'mdi:solar-power'
+        name: Productie Laag
+        type: sensor
+      - entity: sensor.energie_vandaag_gebruik_laag
+        icon: 'mdi:gauge'
+        name: Gebruik Laag
+        type: sensor
+      - entity: sensor.energie_vandaag_netto_laag
+        icon: 'mdi:scale-balance'
+        name: Netto Laag
+        type: sensor
+    type: horizontal-stack
+  - cards:
+      - entity: sensor.energie_vandaag_productie
+        icon: 'mdi:solar-power'
+        name: Totaal Productie
+        type: sensor
+      - entity: sensor.energie_vandaag_gebruik
+        icon: 'mdi:gauge'
+        name: Totaal Gebruik
+        type: sensor
+      - entity: sensor.energie_vandaag_netto
+        icon: 'mdi:scale-balance'
+        name: Totaal netto
+        type: sensor
+    type: horizontal-stack
+  - cards:
+      - entity: sensor.solaredge_energy_today_template
+        icon: 'mdi:solar-power'
+        name: SolarEdge
+        type: sensor
+        unit: kWh
+      - entity: sensor.energie_eigen_gebruik
+        icon: 'mdi:calculator-variant'
+        name: Eigen gebruik zonne-energie
+        type: sensor
+      - entity: sensor.energie_totaal
+        icon: 'mdi:calculator-variant'
+        type: sensor
+    type: horizontal-stack
+title: Energie vandaag
+type: vertical-stack

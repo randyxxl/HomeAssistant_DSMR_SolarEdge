@@ -1,0 +1,23 @@
+# Add the content below to your automations.yaml
+
+- alias: Power Consumption start of the day
+  trigger:
+    platform: time
+    at: '00:00:00'
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.energie_cons_hoog
+        value: "{{ states.sensor.energy_consumption_tarif_2.state }}"
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.energie_cons_laag
+        value: "{{ states.sensor.energy_consumption_tarif_1.state }}"    
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.energie_prod_hoog
+        value: "{{ states.sensor.energy_production_tarif_2.state }}"
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.energie_prod_laag
+        value: "{{ states.sensor.energy_production_tarif_1.state }}"    
